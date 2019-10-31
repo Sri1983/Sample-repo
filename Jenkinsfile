@@ -10,6 +10,17 @@ node{
         sh 'mvn compile'
     }
     }
+    
+    stage ('Review'){
+        try{
+        withMaven (maven:'MyMaven'){
+        sh 'pmd:pmd'
+    }
+        } finally{
+            pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'target/pmd.xml', unHealthy: ''        
+    }
+    }      
+            
     stage ('Test') {
         try{ 
             withMaven(maven:'MyMaven'){
